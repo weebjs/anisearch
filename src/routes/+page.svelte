@@ -1,75 +1,122 @@
-<script>
-	import { Navbar, Kbd, NavBrand, NavLi, NavUl, NavHamburger, ImagePlaceholder, Skeleton, TextPlaceholder, Button, Heading, P, Label, Input, Modal } from 'flowbite-svelte';
-	import "../app.css"
-  
-	let animeModal = false;
-	let emptyInputModal = false;
-	let animeInput = '';
-	let animeData = null;
-  
-	async function searchAnime() {
-	  if (animeInput.trim() === '') {
-		emptyInputModal = true;
-		return;
-	  }
-	  const response = await fetch(`https://api.jikan.moe/v4/anime?q=${animeInput}`);
-	  const data = await response.json();
-	  animeData = data.data[0];
-	  animeModal = true;
-	  emptyInputModal = false;
-	}
-  </script>
-  
-  
-  <div class="relative px-8">
-	<Navbar class="px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 start-0 border-b">
-	  <NavBrand href="/">
-		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">AniSearch</span>
-	  </NavBrand>
-	  <NavUl>
-		<Button size="sm">Get started</Button>
-	  </NavUl>
-	</Navbar>
-  
-	<div class="main-content">
-	  <div class="text-center">
-		<Heading tag="h2" class="mb-4 text-3xl md:text-4xl lg:text-5xl" customSize="text-2xl font-bold md:text-4xl lg:text-5xl">
-		  Welcome to AniSearch!
-		</Heading>
-		<P class="mb-6 text-center text-lg lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-		  AniSearch is a website where you look at information on anime! Just type the anime name below and you'll get the info on it. Simple as that!
-		</P>
-		<div class="flex justify-center mb-6">
-		  <Input type="text" id="anime_name" placeholder="Enter an anime name..." required class="w-full max-w-md" bind:value={animeInput} />
-		</div>
-		<div class="flex justify-center">
-		  <Button size="md" on:click={searchAnime}>Search</Button>
-		</div>
-	  </div>
-	</div>
+<script lang="ts">
+  import { Navbar, Kbd, NavBrand, NavUl, NavHamburger, ImagePlaceholder, Skeleton, TextPlaceholder, Button, Heading, P, Label, Input, Modal, Select } from 'flowbite-svelte';
+  import "../app.css";
+
+  import { SearchSolid, HeartSolid } from "flowbite-svelte-icons";
+
+  let animeModal = false;
+  let emptyInputModal = false;
+  let searchInput = '';
+  let searchData: AnimeData | MangaData | null = null;
+  let searchType = 'anime';
+
+  interface AnimeData {
+    title: string;
+    images: {
+      jpg: {
+        image_url: string;
+      };
+    };
+    type: string;
+    episodes: number;
+    rating: string;
+    score: number;
+    synopsis: string;
+  }
+
+  interface MangaData {
+    title: string;
+    images: {
+      jpg: {
+        image_url: string;
+      };
+    };
+    type: string;
+    chapters: number;
+    volumes: number;
+    score: number;
+    synopsis: string;
+  }
+
+  let searchOptions = [
+    { value: 'anime', name: 'Anime' },
+    { value: 'manga', name: 'Manga' }
+  ];
+
+  async function search() {
+    if (searchInput.trim() === '') {
+      emptyInputModal = true;
+      return;
+    }
+    const response = await fetch(`https://api.jikan.moe/v4/${searchType}?q=${searchInput}`);
+    const data = await response.json();
+    searchData = data.data[0];
+    animeModal = true;
+    emptyInputModal = false;
+  }
+</script>
+
+<div class="relative px-8">
+  <Navbar class="px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 start-0 border-b">
+    <NavBrand href="/">
+      <div class="flex items-center">
+        <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Anidex</span>
+        <HeartSolid class="ml-2 mt-0.5 h-6 w-6" />
+      </div>
+    </NavBrand>
+    <NavUl>
+      <Button shadow size="sm">Support Server</Button>
+    </NavUl>
+  </Navbar>
+
+  <div class="main-content">
+    <div class="text-left flex items-center justify-between">
+      <div>
+        <Heading tag="h2" class="mb-4 text-1xl md:text-2xl lg:text-5xl" customSize="text-2xl font-bold md:text-4xl lg:text-5xl">
+          Anidex
+        </Heading>
+        <P class="mb-6 text-left text-lg lg:text-xl dark:text-gray-400" style="margin-left: 0; padding-left: 0;">
+          Wanna find info on an anime or manga? No worries! <br>
+          With Anidex, just select the type, enter a name, & you're good to go!
+        </P>
+      </div>
+    </div>
+    <div class="flex justify-start mb-6">
+      <Select class="w-40 mr-2" items={searchOptions} bind:value={searchType} />
+      <Input autocomplete=off type="text" id="search_name" placeholder="Enter a name..." required class="w-full max-w-md" bind:value={searchInput} />
+    </div>
+    <div class="flex justify-start mb-3">
+      <Button shadow size="md" on:click={search}><SearchSolid class="w-5 h-5 me-2" /> Search</Button>
+    </div>
   </div>
-  
-  <Modal title="Oops!" bind:open={emptyInputModal} autoclose>
-	<p>Please enter an anime name to search.</p>
-	<svelte:fragment slot="footer">
-	  <Button on:click={() => (emptyInputModal = false)}>Close</Button>
-	</svelte:fragment>
-  </Modal>
-  
-  <Modal title={animeData?.title} bind:open={animeModal} autoclose>
-	{#if animeData}
-	  <div>
-		<img src={animeData.images.jpg.image_url} alt={animeData.title} />
-		<div class="mt-4">
-		  <Kbd class="px-2 py-1.5">Type: {animeData.type}</Kbd>
-		  <Kbd class="px-2 py-1.5">Episodes: {animeData.episodes}</Kbd>
-		  <Kbd class="px-2 py-1.5">Rating: {animeData.rating}</Kbd>
-		  <Kbd class="px-2 py-1.5">Score: {animeData.score}</Kbd>
-		</div>
-		<P class="mt-6 italic" weight="normal">{animeData.synopsis}</P>
-	  </div>
-	{/if}
-	<svelte:fragment slot="footer">
-	  <Button on:click={() => (animeModal = false)}>Close</Button>
-	</svelte:fragment>
-  </Modal>
+</div>
+
+<Modal title="Oops!" bind:open={emptyInputModal} autoclose>
+  <p>Please enter a name to search.</p>
+  <svelte:fragment slot="footer">
+    <Button shadow on:click={() => (emptyInputModal = false)}>Close</Button>
+  </svelte:fragment>
+</Modal>
+
+<Modal title={searchData?.title} bind:open={animeModal} autoclose>
+  {#if searchData}
+    <div>
+      <img src={searchData.images.jpg.image_url} alt={searchData.title} />
+      <div class="mt-4">
+        <Kbd class="px-2 py-1.5">Type: {searchData.type}</Kbd>
+        {#if 'episodes' in searchData}
+          <Kbd class="px-2 py-1.5">Episodes: {searchData.episodes}</Kbd>
+          <Kbd class="px-2 py-1.5">Rating: {searchData.rating}</Kbd>
+        {:else if 'chapters' in searchData}
+          <Kbd class="px-2 py-1.5">Chapters: {searchData.chapters}</Kbd>
+          <Kbd class="px-2 py-1.5">Volumes: {searchData.volumes}</Kbd>
+        {/if}
+        <Kbd class="px-2 py-1.5">Score: {searchData.score}</Kbd>
+      </div>
+      <P class="mt-6 italic" weight="normal">{searchData.synopsis}</P>
+    </div>
+  {/if}
+  <svelte:fragment slot="footer">
+    <Button shadow on:click={() => (animeModal = false)}>Close</Button>
+  </svelte:fragment>
+</Modal>

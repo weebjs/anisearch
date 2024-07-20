@@ -1,5 +1,4 @@
 <script>
-	import Header from './Header.svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import '../app.css';
 </script>
