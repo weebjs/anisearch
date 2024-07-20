@@ -1,5 +1,6 @@
 <script>
 	import { Navbar, Kbd, NavBrand, NavLi, NavUl, NavHamburger, ImagePlaceholder, Skeleton, TextPlaceholder, Button, Heading, P, Label, Input, Modal } from 'flowbite-svelte';
+	import "../app.css"
   
 	let animeModal = false;
 	let emptyInputModal = false;
@@ -19,6 +20,7 @@
 	}
   </script>
   
+  
   <div class="relative px-8">
 	<Navbar class="px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 start-0 border-b">
 	  <NavBrand href="/">
@@ -29,18 +31,20 @@
 	  </NavUl>
 	</Navbar>
   
-	<div class="text-center mt-[12rem]">
-	  <Heading tag="h2" class="mb-4 text-3xl md:text-4xl lg:text-5xl" customSize="text-2xl font-bold md:text-4xl lg:text-5xl">
-		Welcome to AniSearch!
-	  </Heading>
-	  <P class="mb-6 text-center text-lg lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-		AniSearch is a website where you get look at information on anime! Just type the anime name below and you'll get the info on it. Simple as that!
-	  </P>
-	  <div class="flex justify-center mb-6">
-		<Input type="text" id="anime_name" placeholder="Enter an anime name..." required class="w-full max-w-md" bind:value={animeInput} />
-	  </div>
-	  <div class="flex justify-center">
-		<Button size="md" on:click={searchAnime}>Search</Button>
+	<div class="main-content">
+	  <div class="text-center">
+		<Heading tag="h2" class="mb-4 text-3xl md:text-4xl lg:text-5xl" customSize="text-2xl font-bold md:text-4xl lg:text-5xl">
+		  Welcome to AniSearch!
+		</Heading>
+		<P class="mb-6 text-center text-lg lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+		  AniSearch is a website where you look at information on anime! Just type the anime name below and you'll get the info on it. Simple as that!
+		</P>
+		<div class="flex justify-center mb-6">
+		  <Input type="text" id="anime_name" placeholder="Enter an anime name..." required class="w-full max-w-md" bind:value={animeInput} />
+		</div>
+		<div class="flex justify-center">
+		  <Button size="md" on:click={searchAnime}>Search</Button>
+		</div>
 	  </div>
 	</div>
   </div>
