@@ -61,7 +61,6 @@
     <NavBrand href="/">
       <div class="flex items-center">
         <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Anidisc</span>
-        <img src="src/logo.png" class="ml-2 mb-1 h-9 w-9" alt="logo">
       </div>
     </NavBrand>
     <NavUl>
