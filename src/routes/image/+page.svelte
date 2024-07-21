@@ -62,7 +62,7 @@
   </div>
 </div>
 
-<Modal title="Waifu" bind:open={waifuModal} autoclose>
+<Modal title="Generated!" bind:open={waifuModal} autoclose>
   {#if waifuData && waifuData.images && waifuData.images.length > 0}
     <div>
       <img src={waifuData.images[0].url} alt="Waifu" />
