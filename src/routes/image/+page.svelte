@@ -32,21 +32,11 @@
 </script>
 
 <div class="relative px-8">
-  <Navbar class="px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 start-0 border-b">
-    <NavBrand href="/">
-      <div class="flex items-center">
-        <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Anidisc</span>
-      </div>
-    </NavBrand>
-    <NavUl>
-      <Button shadow size="sm">Support Server</Button>
-    </NavUl>
-  </Navbar>
 
   <div class="main-content">
     <div class="text-left flex items-center justify-between">
       <div>
-        <Heading tag="h2" class="mb-4 text-1xl md:text-2xl lg:text-5xl" customSize="text-2xl font-bold md:text-4xl lg:text-5xl">
+        <Heading tag="h2" class="mb-4 text-3xl md:text-4xl lg:text-5xl" customSize="text-2xl font-bold md:text-4xl lg:text-5xl">
           Anidisc
         </Heading>
         <P class="mb-6 text-left text-lg lg:text-xl dark:text-gray-400" style="margin-left: 0; padding-left: 0;">
