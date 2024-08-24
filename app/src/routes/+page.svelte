@@ -10,6 +10,8 @@
   let showError = false;
   let searchInput = '';
   let searchData: AnimeData | null = null;
+  let searchResults: AnimeData[] = [];
+  let currentIndex = 0;
 
   async function search() {
     if (searchInput.trim() === '') {
@@ -19,8 +21,24 @@
     showError = false;
     const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(searchInput)}`);
     const data = await response.json();
-    searchData = data.data[0];
+    searchResults = data.data;
+    currentIndex = 0;
+    searchData = searchResults[currentIndex];
     animeModal = true;
+  }
+
+  function nextAnime() {
+    if (currentIndex < searchResults.length - 1) {
+      currentIndex++;
+      searchData = searchResults[currentIndex];
+    }
+  }
+
+  function previousAnime() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      searchData = searchResults[currentIndex];
+    }
   }
 </script>
 
@@ -55,6 +73,7 @@
   <DialogContent class="max-w-3xl w-full">
     <DialogHeader>
       <DialogTitle class="text-2xl font-bold">{searchData?.title}</DialogTitle>
+      <p class="text-sm text-muted-foreground">Result {currentIndex + 1} of {searchResults.length}</p>
     </DialogHeader>
     {#if searchData}
       <div class="space-y-4 max-h-[70vh] overflow-y-auto">
@@ -75,8 +94,12 @@
         </div>
       </div>
     {/if}
-    <DialogFooter>
-      <Button on:click={() => (animeModal = false)}>Close</Button>
+    <DialogFooter class="flex justify-between">
+      <div>
+        <Button on:click={previousAnime} disabled={currentIndex === 0}>Previous</Button>
+        <Button on:click={nextAnime} disabled={currentIndex === searchResults.length - 1}>Next</Button>
+      </div>
+      <Button variant="destructive" on:click={() => (animeModal = false)}>Close</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>
